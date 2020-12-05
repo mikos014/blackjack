@@ -15,6 +15,18 @@ def b_stand_on_click():
     messagebox.showinfo('Message', 'You clicked the Submit button!')
 
 
+def show_player_cards():
+    #     get card
+    #     show in player's area
+    pass
+
+
+def show_dealer_cards():
+    #   get card
+    #   show in dealer's area
+    pass
+
+
 root = Tk()
 root.title("Blackjack")
 root.geometry("960x640")
