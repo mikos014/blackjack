@@ -1,6 +1,4 @@
-class Dealer:
-
-    # todo let's inherit from Player and add methods hide points of hidden card
+class Player:
     def __init__(self):
         self.cards = []
 
@@ -16,4 +14,3 @@ class Dealer:
         for card in self.cards:
             points += card.get_value()
         return points
-
