@@ -17,3 +17,5 @@ class Dealer:
             points += card.get_value()
         return points
 
+    def play(self):
+        pass

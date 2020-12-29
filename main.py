@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import ImageTk, Image
 
 from deck import Deck
+from game import Game
 from player import Player
 from dealer import Dealer
 
@@ -10,23 +11,33 @@ from dealer import Dealer
 root = Tk()
 root.title("Blackjack")
 root.geometry("960x640")
+deal_button_layout = [300, 560]
+hit_button_layout = [420, 560]
+stand_button_layout = [540, 560]
+split_button_layout = [660, 560]
+
+card_size = (102, 150)
+card_background = 'green'
+player_card_layout = [[300, 330], [420, 330], [540, 330], [660, 330], [780, 330]]
+dealer_card_layout = [[300, 30], [420, 30], [540, 30], [660, 30], [780, 30]]
 
 
 # controllers
-def b_deal_on_click():
-    messagebox.showinfo('Message', 'You clicked the Submit button!')
-
-
-def b_hit_on_click():
-    messagebox.showinfo('Message', 'You clicked the Submit button!')
-
-
-def b_stand_on_click():
-    messagebox.showinfo('Message', 'You clicked the Submit button!')
+# def b_deal_on_click():
+#     messagebox.showinfo('Message', 'You clicked the Submit button!')
+#
+#
+# def b_hit_on_click():
+#     messagebox.showinfo('Message', 'You clicked the Submit button!')
+#
+#
+# def b_stand_on_click():
+#     messagebox.showinfo('Message', 'You clicked the Submit button!')
 
 
 # UI
 def show_player_cards():
+    print("laal")
     #     get card
     #     show in player's area
     pass
@@ -38,76 +49,89 @@ def show_dealer_cards():
     pass
 
 
+def empty_func():
+    pass
+
+
+def show_button(button):
+    if button["text"] == "DEAL":
+        button.place(x=deal_button_layout[0], y=deal_button_layout[1])
+    elif button["text"] == "HIT":
+        button.place(x=hit_button_layout[0], y=hit_button_layout[1])
+    elif button["text"] == "STAND":
+        button.place(x=stand_button_layout[0], y=stand_button_layout[1])
+    elif button["text"] == "SPLIT":
+        button.place(x=split_button_layout[0], y=split_button_layout[1])
+
+
 # UX
 #   set buttons
 bg_image = ImageTk.PhotoImage(Image.open("assets/background.jpg"))
 bg_label = Label(image=bg_image)
-bg_label.place(x=0, y=0)
-b_deal = Button(text="DEAL", command=b_deal_on_click, width=12, height=2)
-b_deal.place(x=300, y=560)
-b_hit = Button(text="HIT", command=b_hit_on_click, width=12, height=2)
-b_hit.place(x=420, y=560)
-b_stand = Button(text="STAND", command=b_stand_on_click, width=12, height=2)
-b_stand.place(x=540, y=560)
+bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+b_deal = Button(text="DEAL", width=12, height=2)
+show_button(b_deal)
+b_hit = Button(text="HIT", width=12, height=2)
+# show_button(b_hit)
+b_stand = Button(text="STAND", width=12, height=2)
+# show_button(b_stand)
 
-#   cards
-deck_of_cards = Deck()
-deck_of_cards.shuffle()
+card_back_path = "assets/back.png"
 
-#       player's card1
-player = Player()
-player_card = deck_of_cards.get_card()
-player.set_card(player_card)
+#       player's cards
+# player = Player()
+# player_card = deck_of_cards.get_card()
+# player.set_card(player_card)
 
-i_card1 = Image.open(player_card.get_path()).resize((102, 150), Image.ANTIALIAS)
-iTK_card1 = ImageTk.PhotoImage(i_card1)
-l_card1 = Label(image=iTK_card1).place(x=300, y=330)
+card_back_i = Image.open(card_back_path).resize(card_size, Image.ANTIALIAS)
+card_back_iTK = ImageTk.PhotoImage(card_back_i)
+player_card_l1 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[0][0], y=player_card_layout[0][1])
+player_card_l2 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[1][0], y=player_card_layout[1][1])
+player_card_l3 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[2][0], y=player_card_layout[2][1])
+player_card_l4 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[3][0], y=player_card_layout[3][1])
+player_card_l5 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[4][0], y=player_card_layout[4][1])
+
 
 #       dealer's card1
-dealer = Dealer()
-dealer_card = deck_of_cards.get_card()
-dealer.set_card(dealer_card)
+# dealer = Dealer()
+# dealer_card = deck_of_cards.get_card()
+# dealer.set_card(dealer_card)
 
-i_card2 = Image.open(dealer_card.get_path()).resize((102, 150), Image.ANTIALIAS)
-iTK_card2 = ImageTk.PhotoImage(i_card2)
-l_card2 = Label(image=iTK_card2).place(x=300, y=30)
-
-#       player's card2
-player_card = deck_of_cards.get_card()
-player.set_card(player_card)
-
-i_card3 = Image.open(player_card.get_path()).resize((102, 150), Image.ANTIALIAS)
-iTK_card3 = ImageTk.PhotoImage(i_card3)
-l_card3 = Label(image=iTK_card3).place(x=420, y=330)
-
-#       dealer's card2
-dealer_card = deck_of_cards.get_card()
-dealer.set_card(dealer_card)
-
-i_card4 = Image.open(dealer_card.get_path()).resize((102, 150), Image.ANTIALIAS)
-iTK_card4 = ImageTk.PhotoImage(i_card4)
-l_card4 = Label(image=iTK_card4).place(x=420, y=30)
+dealer_card_l1 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[0][0], y=dealer_card_layout[0][1])
+dealer_card_l2 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][1])
+dealer_card_l3 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[2][0], y=dealer_card_layout[2][1])
+dealer_card_l4 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[3][0], y=dealer_card_layout[3][1])
+dealer_card_l5 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[4][0], y=dealer_card_layout[4][1])
 
 #   dealer score
-dealer_score = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = " + str(dealer.count_points()))
-dealer_score.place(x=200, y=205)
+dealer_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = ")
+dealer_score_label.place(x=200, y=205)
 
 #   score info
-text_score = Label(root, height=2, width=10, bg="yellow", fg="black", text="Points:")
-text_score.place(x=200, y=240)
+text_score_label = Label(root, height=2, width=10, bg="yellow", fg="black", text="Points:")
+text_score_label.place(x=200, y=240)
 
 #   player score
-player_score = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="You = " + str(player.count_points()))
-player_score.place(x=200, y=270)
+player_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="You = ")
+player_score_label.place(x=200, y=270)
 
-# TODO next cards for player
-# i_spadesK = Image.open("assets/spades/king.png").resize((102, 150), Image.ANTIALIAS)
-# iTK_spadesK = ImageTk.PhotoImage(i_spadesK)
-# spadesK = Label(image=iTK_spadesK).place(x=540, y=330)
-#
-# i_spadesAce = Image.open("assets/spades/ace.png").resize((102, 150), Image.ANTIALIAS)
-# iTK_spadesAce = ImageTk.PhotoImage(i_spadesAce)
-# spadesAce = Label(image=iTK_spadesAce).place(x=660, y=330)
+#   instructions
+instruction_label = Label(root, height=2, width=30, bg="darkgreen", text="Place your bets")
+instruction_label.place(x=350, y=240)
 
+
+def start_playing():
+    game = Game(player_card_l1, player_card_l2, player_card_l3, player_card_l4, player_card_l5,
+                dealer_card_l1, dealer_card_l2, dealer_card_l3, dealer_card_l4, dealer_card_l5,
+                player_score_label, dealer_score_label)
+
+    b_deal.place_forget()
+    show_button(b_hit)
+    show_button(b_stand)
+    print("in")
+
+
+print("out")
+b_deal.bind('<Button-1>', lambda event: start_playing())
 root.mainloop()
