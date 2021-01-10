@@ -1,21 +1,18 @@
-class Dealer:
+from player import Player
 
-    # todo let's inherit from Player and add methods hide points of hidden card
-    def __init__(self):
-        self.cards = []
 
-    # todo delete if unused
-    def get_cards(self):
-        return self.cards
+class Dealer(Player):
 
-    def set_card(self, card):
-        self.cards.append(card)
-
-    def count_points(self):
+    def count_points(self, aces_as_one_point=False):
         points = 0
         for card in self.cards:
-            points += card.get_value()
+            if card.is_visible():
+                if aces_as_one_point and (card.get_second_value() is not None):
+                    points += card.get_second_value()
+                else:
+                    points += card.get_value()
         return points
 
     def play(self):
+        # mechanism to get dealer's points and hit or stand
         pass

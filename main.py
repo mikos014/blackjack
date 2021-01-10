@@ -2,25 +2,13 @@ from tkinter import *
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
-from deck import Deck
 from game import Game
-from player import Player
-from dealer import Dealer
+from config import *
 
 # Start frame
 root = Tk()
-root.title("Blackjack")
-root.geometry("960x640")
-deal_button_layout = [300, 560]
-hit_button_layout = [420, 560]
-stand_button_layout = [540, 560]
-split_button_layout = [660, 560]
-
-card_size = (102, 150)
-card_background = 'green'
-player_card_layout = [[300, 330], [420, 330], [540, 330], [660, 330], [780, 330]]
-dealer_card_layout = [[300, 30], [420, 30], [540, 30], [660, 30], [780, 30]]
-
+root.title(window_title)
+root.geometry(window_geometry)
 
 # controllers
 # def b_deal_on_click():
@@ -36,22 +24,6 @@ dealer_card_layout = [[300, 30], [420, 30], [540, 30], [660, 30], [780, 30]]
 
 
 # UI
-def show_player_cards():
-    print("laal")
-    #     get card
-    #     show in player's area
-    pass
-
-
-def show_dealer_cards():
-    #   get card
-    #   show in dealer's area
-    pass
-
-
-def empty_func():
-    pass
-
 
 def show_button(button):
     if button["text"] == "DEAL":
@@ -77,32 +49,29 @@ b_hit = Button(text="HIT", width=12, height=2)
 b_stand = Button(text="STAND", width=12, height=2)
 # show_button(b_stand)
 
-card_back_path = "assets/back.png"
-
-#       player's cards
-# player = Player()
-# player_card = deck_of_cards.get_card()
-# player.set_card(player_card)
-
-card_back_i = Image.open(card_back_path).resize(card_size, Image.ANTIALIAS)
+#   cards_layout
+card_back_i = Image.open(card_path + "back.png").resize(card_size, Image.ANTIALIAS)
 card_back_iTK = ImageTk.PhotoImage(card_back_i)
-player_card_l1 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[0][0], y=player_card_layout[0][1])
-player_card_l2 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[1][0], y=player_card_layout[1][1])
-player_card_l3 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[2][0], y=player_card_layout[2][1])
-player_card_l4 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[3][0], y=player_card_layout[3][1])
-player_card_l5 = Label(image=card_back_iTK, bg=card_background).place(x=player_card_layout[4][0], y=player_card_layout[4][1])
 
+player_card_l1 = Label(image=card_back_iTK, bg=card_background)
+player_card_l2 = Label(image=card_back_iTK, bg=card_background)
+player_card_l3 = Label(image=card_back_iTK, bg=card_background)
+player_card_l4 = Label(image=card_back_iTK, bg=card_background)
+player_card_l5 = Label(image=card_back_iTK, bg=card_background)
 
-#       dealer's card1
-# dealer = Dealer()
-# dealer_card = deck_of_cards.get_card()
-# dealer.set_card(dealer_card)
+player_card_labels = [player_card_l1, player_card_l2, player_card_l3, player_card_l4, player_card_l5]
+player_card_labels[0].place(x=player_card_layout[0][0], y=player_card_layout[0][1])
+player_card_labels[1].place(x=player_card_layout[1][0], y=player_card_layout[1][1])
 
-dealer_card_l1 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[0][0], y=dealer_card_layout[0][1])
-dealer_card_l2 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][1])
-dealer_card_l3 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[2][0], y=dealer_card_layout[2][1])
-dealer_card_l4 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[3][0], y=dealer_card_layout[3][1])
-dealer_card_l5 = Label(image=card_back_iTK, bg=card_background).place(x=dealer_card_layout[4][0], y=dealer_card_layout[4][1])
+dealer_card_l1 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l2 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l3 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l4 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l5 = Label(image=card_back_iTK, bg=card_background)
+
+dealer_card_labels = [dealer_card_l1, dealer_card_l2, dealer_card_l3, dealer_card_l4, dealer_card_l5]
+dealer_card_labels[0].place(x=dealer_card_layout[0][0], y=dealer_card_layout[0][1])
+dealer_card_labels[1].place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][1])
 
 #   dealer score
 dealer_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = ")
@@ -122,13 +91,15 @@ instruction_label.place(x=350, y=240)
 
 
 def start_playing():
-    game = Game(player_card_l1, player_card_l2, player_card_l3, player_card_l4, player_card_l5,
-                dealer_card_l1, dealer_card_l2, dealer_card_l3, dealer_card_l4, dealer_card_l5,
-                player_score_label, dealer_score_label)
+    game = Game(player_card_labels, dealer_card_labels, player_score_label, dealer_score_label, instruction_label)
 
-    b_deal.place_forget()
+    # b_deal.place_forget()
+    game.show_initial_cards()
+
     show_button(b_hit)
     show_button(b_stand)
+    b_hit.bind('<Button-1>', lambda event: game.show_next_card(player_request=True))
+    b_stand.bind('<Button-1>', lambda event: game.player_on_stand())
     print("in")
 
 
