@@ -24,7 +24,7 @@ class Player:
         return self.points
 
     def set_points(self, points):
-        self.points += points
+        self.points = points
 
     def count_points(self, aces_as_one_point=False):
         points = 0
@@ -34,3 +34,9 @@ class Player:
             else:
                 points += card.get_value()
         return points
+
+    def prepare_to_new_round(self):
+        self.cards = []
+        self.current_card_index = 0
+        self.number_of_aces = 0
+        self.points = 0

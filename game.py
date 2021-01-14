@@ -8,7 +8,7 @@ from player import Player
 
 class Game:
     def __init__(self, player_card_labels, dealer_card_labels, player_score_label, dealer_score_label,
-                 instruction_label):
+                 instruction_label, b_deal, b_hit, b_stand):
         self.player_card_labels = player_card_labels
         self.dealer_card_labels = dealer_card_labels
 
@@ -16,22 +16,43 @@ class Game:
         self.dealer_score_label = dealer_score_label
         self.instruction_label = instruction_label
 
+        self.b_deal = b_deal
+        self.b_hit = b_hit
+        self.b_stand = b_stand
+
         #   cards
         self.deck_of_cards = Deck(card_path)
-        self.deck_of_cards.shuffle()
-
         #   players
         self.player = Player()
         self.dealer = Dealer()
 
-    def show_initial_cards(self):
-        # for i in range(2):
-        self.show_next_card(player_request=True)
-        self.show_next_card(player_request=False, visible=False)
-        self.show_next_card(player_request=True)
+    def init_game(self):
+        self.deck_of_cards.shuffle()
+        self.prepare_players()
+        self.clean_table()
+        self.b_deal.unbind('<Button-1>')
+        self.b_deal.config(state='disabled')
+        self.b_hit.bind('<Button-1>', lambda event: self.show_next_card(player_request=True))
+        self.b_hit.config(state='normal')
+        self.b_stand.bind('<Button-1>', lambda event: self.player_on_stand())
+        self.b_stand.config(state='normal')
+        self.instruction_label.config(text="")
+        self.show_next_card(player_request=True, init=True)
+        self.show_next_card(player_request=False, init=True, visible=False)
+        self.show_next_card(player_request=True, init=True)
         self.show_next_card(player_request=False)
 
-    def show_next_card(self, player_request, visible=True):
+    def prepare_players(self):
+        self.player.prepare_to_new_round()
+        self.dealer.prepare_to_new_round()
+
+    def clean_table(self):
+        for player_label in self.player_card_labels:
+            player_label.place_forget()
+        for dealer_label in self.dealer_card_labels:
+            dealer_label.place_forget()
+
+    def show_next_card(self, player_request, init=False, visible=True):
         card = self.deck_of_cards.get_card()
         card.set_visible(visible)
 
@@ -45,18 +66,25 @@ class Game:
 
         current_player.set_points(self.count_scoring(current_player))
         self.update_score_table(player_request)
-        self.check_if_is_21_or_more()
+        if not init:
+            self.check_if_is_21_or_more()
 
     def show_on_screen(self, on_player_side, card):
         card_i = Image.open(card.get_path()).resize(card_size, Image.ANTIALIAS)
         card_i_tk = ImageTk.PhotoImage(card_i)
         if on_player_side:
-            self.player_card_labels[self.player.get_current_card_index() - 1].configure(image=card_i_tk)
-            self.player_card_labels[self.player.get_current_card_index() - 1].image = card_i_tk
+            index = self.player.get_current_card_index() - 1
+            self.player_card_labels[index].configure(image=card_i_tk)
+            self.player_card_labels[index].image = card_i_tk
+            self.player_card_labels[index].place(x=player_card_layout[index][0], y=player_card_layout[index][1])
         else:
-            if card.is_visible():
-                self.dealer_card_labels[self.dealer.get_current_card_index() - 1].configure(image=card_i_tk)
-                self.dealer_card_labels[self.dealer.get_current_card_index() - 1].image = card_i_tk
+            index = self.dealer.get_current_card_index() - 1
+            if not card.is_visible():
+                card_i = Image.open(card_path + "back.png").resize(card_size, Image.ANTIALIAS)
+                card_i_tk = ImageTk.PhotoImage(card_i)
+            self.dealer_card_labels[self.dealer.get_current_card_index() - 1].configure(image=card_i_tk)
+            self.dealer_card_labels[self.dealer.get_current_card_index() - 1].image = card_i_tk
+            self.dealer_card_labels[index].place(x=dealer_card_layout[index][0], y=dealer_card_layout[index][1])
 
     def count_scoring(self, current_player):
         points = current_player.count_points()
@@ -72,23 +100,37 @@ class Game:
         if player_request:
             self.player_score_label.config(text="You = " + str(self.player.get_points()))
         else:
-            self.dealer_score_label.config(text="Dealer = " + str(self.count_scoring(self.dealer)))
+            self.dealer_score_label.config(text="Dealer = " + str(self.dealer.get_points()))
 
     def check_if_is_21_or_more(self):
         player_points = self.player.get_points()
         dealer_points = self.dealer.get_points()
         if player_points > 20 or dealer_points > 20:
-            if player_points == 21 or dealer_points > 21:
+            if player_points == 21 and dealer_points == 21:
+                self.instruction_label.config(text="PUSH !")
+            elif player_points == 21 or dealer_points > 21:
                 self.instruction_label.config(text="You won ! Press 'DEAL' to try again.")
             elif player_points > 21 or dealer_points == 21:
                 self.instruction_label.config(text="Dealer won. Press 'DEAL' to try again.")
-            self.update_score_table(player_request=False, with_invisible_card=True)
-            self.show_dealer_hidden_card()
             # end game
+            self.end_game()
+            # init on press button
+            # self.init_game()
 
     def player_on_stand(self):
-        self.dealer.play()
+        self.dealer.play(self.__class__)
+        self.check_if_is_21_or_more()
         # dealer's turn
+
+    def end_game(self):
+        self.update_score_table(player_request=False)
+        self.show_dealer_hidden_card()
+        self.b_deal.bind('<Button-1>', lambda event: self.init_game())
+        self.b_deal.config(state='normal')
+        self.b_hit.config(state='disabled')
+        self.b_hit.unbind('<Button-1>')
+        self.b_stand.config(state='disabled')
+        self.b_stand.unbind('<Button-1>')
 
     def show_dealer_hidden_card(self):
         cards = self.dealer.get_cards()
@@ -97,3 +139,6 @@ class Game:
         card_i_tk = ImageTk.PhotoImage(card_i)
         self.dealer_card_labels[0].configure(image=card_i_tk)
         self.dealer_card_labels[0].image = card_i_tk
+        self.dealer.set_points(self.count_scoring(self.dealer))
+        self.update_score_table(player_request=False)
+

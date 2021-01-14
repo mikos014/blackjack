@@ -13,6 +13,9 @@ class Dealer(Player):
                     points += card.get_value()
         return points
 
-    def play(self):
-        # mechanism to get dealer's points and hit or stand
-        pass
+    def play(self, game):
+        points = super().count_points()
+        while points < 17:
+            game.show_next_card(player_request=False)
+            points = super(Dealer, self).count_points()
+

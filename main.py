@@ -75,31 +75,30 @@ dealer_card_labels[1].place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][
 
 #   dealer score
 dealer_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = ")
-dealer_score_label.place(x=200, y=205)
+dealer_score_label.place(x=dealer_score_layout[0], y=dealer_score_layout[1])
 
 #   score info
 text_score_label = Label(root, height=2, width=10, bg="yellow", fg="black", text="Points:")
-text_score_label.place(x=200, y=240)
+text_score_label.place(x=text_score_layout[0], y=text_score_layout[1])
 
 #   player score
 player_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="You = ")
-player_score_label.place(x=200, y=270)
+player_score_label.place(x=player_score_layout[0], y=player_score_layout[1])
 
 #   instructions
-instruction_label = Label(root, height=2, width=30, bg="darkgreen", text="Place your bets")
-instruction_label.place(x=350, y=240)
+instruction_label = Label(root, height=2, width=30, bg="darkgreen", fg="white", text="Place your bets")
+instruction_label.config(width=40, font=("Courier", 15))
+instruction_label.place(x=instruction_layout[0], y=instruction_layout[1])
 
 
 def start_playing():
-    game = Game(player_card_labels, dealer_card_labels, player_score_label, dealer_score_label, instruction_label)
+    game = Game(player_card_labels, dealer_card_labels, player_score_label, dealer_score_label, instruction_label,
+                b_deal, b_hit, b_stand)
 
     # b_deal.place_forget()
-    game.show_initial_cards()
-
     show_button(b_hit)
     show_button(b_stand)
-    b_hit.bind('<Button-1>', lambda event: game.show_next_card(player_request=True))
-    b_stand.bind('<Button-1>', lambda event: game.player_on_stand())
+    game.init_game()
     print("in")
 
 

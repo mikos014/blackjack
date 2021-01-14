@@ -11,3 +11,7 @@ card_path = "assets/"
 card_background = 'green'
 player_card_layout = [[300, 330], [420, 330], [540, 330], [660, 330], [780, 330]]
 dealer_card_layout = [[300, 30], [420, 30], [540, 30], [660, 30], [780, 30]]
+player_score_layout = [200, 270]
+dealer_score_layout = [200, 205]
+text_score_layout = [200, 240]
+instruction_layout = [320, 231]
