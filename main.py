@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import messagebox
 from PIL import ImageTk, Image
 
 from game import Game
@@ -10,21 +9,8 @@ root = Tk()
 root.title(window_title)
 root.geometry(window_geometry)
 
-# controllers
-# def b_deal_on_click():
-#     messagebox.showinfo('Message', 'You clicked the Submit button!')
-#
-#
-# def b_hit_on_click():
-#     messagebox.showinfo('Message', 'You clicked the Submit button!')
-#
-#
-# def b_stand_on_click():
-#     messagebox.showinfo('Message', 'You clicked the Submit button!')
-
 
 # UI
-
 def show_button(button):
     if button["text"] == "DEAL":
         button.place(x=deal_button_layout[0], y=deal_button_layout[1])
@@ -58,8 +44,12 @@ player_card_l2 = Label(image=card_back_iTK, bg=card_background)
 player_card_l3 = Label(image=card_back_iTK, bg=card_background)
 player_card_l4 = Label(image=card_back_iTK, bg=card_background)
 player_card_l5 = Label(image=card_back_iTK, bg=card_background)
+player_card_l6 = Label(image=card_back_iTK, bg=card_background)
+player_card_l7 = Label(image=card_back_iTK, bg=card_background)
+player_card_l8 = Label(image=card_back_iTK, bg=card_background)
 
-player_card_labels = [player_card_l1, player_card_l2, player_card_l3, player_card_l4, player_card_l5]
+player_card_labels = [player_card_l1, player_card_l2, player_card_l3, player_card_l4,
+                      player_card_l5, player_card_l6, player_card_l7, player_card_l8]
 player_card_labels[0].place(x=player_card_layout[0][0], y=player_card_layout[0][1])
 player_card_labels[1].place(x=player_card_layout[1][0], y=player_card_layout[1][1])
 
@@ -68,8 +58,12 @@ dealer_card_l2 = Label(image=card_back_iTK, bg=card_background)
 dealer_card_l3 = Label(image=card_back_iTK, bg=card_background)
 dealer_card_l4 = Label(image=card_back_iTK, bg=card_background)
 dealer_card_l5 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l6 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l7 = Label(image=card_back_iTK, bg=card_background)
+dealer_card_l8 = Label(image=card_back_iTK, bg=card_background)
 
-dealer_card_labels = [dealer_card_l1, dealer_card_l2, dealer_card_l3, dealer_card_l4, dealer_card_l5]
+dealer_card_labels = [dealer_card_l1, dealer_card_l2, dealer_card_l3, dealer_card_l4,
+                      dealer_card_l5, dealer_card_l6, dealer_card_l7, dealer_card_l8]
 dealer_card_labels[0].place(x=dealer_card_layout[0][0], y=dealer_card_layout[0][1])
 dealer_card_labels[1].place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][1])
 

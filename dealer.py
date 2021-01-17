@@ -13,9 +13,9 @@ class Dealer(Player):
                     points += card.get_value()
         return points
 
-    def play(self, game):
+    def is_sure_to_get_card(self):
         points = super().count_points()
-        while points < 17:
-            game.show_next_card(player_request=False)
-            points = super(Dealer, self).count_points()
-
+        if points < 17:
+            return True
+        else:
+            return False

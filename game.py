@@ -32,15 +32,15 @@ class Game:
         self.clean_table()
         self.b_deal.unbind('<Button-1>')
         self.b_deal.config(state='disabled')
-        self.b_hit.bind('<Button-1>', lambda event: self.show_next_card(player_request=True))
+        self.b_hit.bind('<Button-1>', lambda event: self.get_next_card(player_request=True))
         self.b_hit.config(state='normal')
         self.b_stand.bind('<Button-1>', lambda event: self.player_on_stand())
         self.b_stand.config(state='normal')
         self.instruction_label.config(text="")
-        self.show_next_card(player_request=True, init=True)
-        self.show_next_card(player_request=False, init=True, visible=False)
-        self.show_next_card(player_request=True, init=True)
-        self.show_next_card(player_request=False)
+        self.get_next_card(player_request=True, init=True)
+        self.get_next_card(player_request=False, init=True, visible=False)
+        self.get_next_card(player_request=True, init=True)
+        self.get_next_card(player_request=False)
 
     def prepare_players(self):
         self.player.prepare_to_new_round()
@@ -52,7 +52,7 @@ class Game:
         for dealer_label in self.dealer_card_labels:
             dealer_label.place_forget()
 
-    def show_next_card(self, player_request, init=False, visible=True):
+    def get_next_card(self, player_request, init=False, visible=True):
         card = self.deck_of_cards.get_card()
         card.set_visible(visible)
 
@@ -82,8 +82,8 @@ class Game:
             if not card.is_visible():
                 card_i = Image.open(card_path + "back.png").resize(card_size, Image.ANTIALIAS)
                 card_i_tk = ImageTk.PhotoImage(card_i)
-            self.dealer_card_labels[self.dealer.get_current_card_index() - 1].configure(image=card_i_tk)
-            self.dealer_card_labels[self.dealer.get_current_card_index() - 1].image = card_i_tk
+            self.dealer_card_labels[index].configure(image=card_i_tk)
+            self.dealer_card_labels[index].image = card_i_tk
             self.dealer_card_labels[index].place(x=dealer_card_layout[index][0], y=dealer_card_layout[index][1])
 
     def count_scoring(self, current_player):
@@ -114,13 +114,13 @@ class Game:
                 self.instruction_label.config(text="Dealer won. Press 'DEAL' to try again.")
             # end game
             self.end_game()
-            # init on press button
-            # self.init_game()
 
     def player_on_stand(self):
-        self.dealer.play(self.__class__)
-        self.check_if_is_21_or_more()
-        # dealer's turn
+        self.dealer_turn()
+        if self.player.get_points() < 21 and self.dealer.get_points() < 21:
+            self.check_who_win()
+        else:
+            self.check_if_is_21_or_more()
 
     def end_game(self):
         self.update_score_table(player_request=False)
@@ -142,3 +142,17 @@ class Game:
         self.dealer.set_points(self.count_scoring(self.dealer))
         self.update_score_table(player_request=False)
 
+    def dealer_turn(self):
+        self.show_dealer_hidden_card()
+        while self.dealer.is_sure_to_get_card():
+            self.get_next_card(player_request=False)
+
+    # extra method to check who has more points but under 21
+    def check_who_win(self):
+        self.end_game()
+        if self.player.get_points() > self.dealer.get_points():
+            self.instruction_label.config(text="You won ! Press 'DEAL' to try again.")
+        elif self.player.get_points() < self.dealer.get_points():
+            self.instruction_label.config(text="Dealer won. Press 'DEAL' to try again.")
+        else:
+            self.instruction_label.config(text="PUSH !")

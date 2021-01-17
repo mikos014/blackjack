@@ -7,16 +7,22 @@ class Deck:
         self.card_path = card_path
         self.cards = self.load_card_graph(card_path)
         self.back = None
+        self.out_of_deck_cards = 0
 
     def shuffle(self):
         # TODO break, text about shuffling, setting is_on_deck = True in all cards
+        for c in self.cards:
+            c.set_on_deck(True)
         random.shuffle(self.cards)
 
     def get_card(self):
+        if self.out_of_deck_cards > 20:
+            self.shuffle()
         while True:
             index = random.randint(0, 51)
             if self.cards[index].is_on_deck():
                 self.cards[index].set_on_deck(False)
+                self.out_of_deck_cards += 1
                 return self.cards[index]
 
     def get_card_back_graph_path(self):
