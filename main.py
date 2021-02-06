@@ -30,9 +30,10 @@ def show_button(button):
 
 # UX
 #   set buttons
-bg_image = ImageTk.PhotoImage(Image.open("assets/background.jpg"))
-bg_label = Label(image=bg_image)
-bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+# bg_image = ImageTk.PhotoImage(Image.open("assets/background.jpg"))
+# bg_label = Label(image=bg_image)
+# bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+root.configure(bg="darkgreen")
 
 b_deal = Button(text="DEAL", width=12, height=2)
 show_button(b_deal)
@@ -74,7 +75,7 @@ dealer_card_labels[0].place(x=dealer_card_layout[0][0], y=dealer_card_layout[0][
 dealer_card_labels[1].place(x=dealer_card_layout[1][0], y=dealer_card_layout[1][1])
 
 #   dealer score
-dealer_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = ")
+dealer_score_label = Label(root, height=2, width=10, bg="green", fg="yellow", text="Dealer = ")
 dealer_score_label.place(x=dealer_score_layout[0], y=dealer_score_layout[1])
 
 #   score info
@@ -82,7 +83,7 @@ text_score_label = Label(root, height=2, width=10, bg="yellow", fg="black", text
 text_score_label.place(x=text_score_layout[0], y=text_score_layout[1])
 
 #   player score
-player_score_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="You = ")
+player_score_label = Label(root, height=2, width=10, bg="green", fg="yellow", text="You = ")
 player_score_label.place(x=player_score_layout[0], y=player_score_layout[1])
 
 #   instructions
@@ -95,11 +96,11 @@ text_bets_label = Label(root, height=2, width=10, bg="yellow", fg="black", text=
 text_bets_label.place(x=text_bets_layout[0], y=text_bets_layout[1])
 
 #   player bets
-bets_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="$1")
+bets_label = Label(root, height=2, width=10, bg="green", fg="yellow", text="$1")
 bets_label.place(x=bets_layout[0], y=bets_layout[1])
 
 #   dealer money
-dealer_money_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="Dealer = $100")
+dealer_money_label = Label(root, height=2, width=10, bg="green", fg="yellow", text="Dealer = $100")
 dealer_money_label.place(x=dealer_money_layout[0], y=dealer_money_layout[1])
 
 #   money info
@@ -107,7 +108,7 @@ text_money_label = Label(root, height=2, width=10, bg="yellow", fg="black", text
 text_money_label.place(x=text_money_layout[0], y=text_money_layout[1])
 
 #   player money
-player_money_label = Label(root, height=2, width=10, bg="darkgreen", fg="yellow", text="You = $100")
+player_money_label = Label(root, height=2, width=10, bg="green", fg="yellow", text="You = $100")
 player_money_label.place(x=player_money_layout[0], y=player_money_layout[1])
 
 #   chips
