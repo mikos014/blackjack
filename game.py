@@ -8,13 +8,17 @@ from player import Player
 
 class Game:
     def __init__(self, player_card_labels, dealer_card_labels, player_score_label, dealer_score_label,
-                 instruction_label, b_deal, b_hit, b_stand):
+                 instruction_label, b_deal, b_hit, b_stand, player_money_label, dealer_money_label, bets_label,
+                 red_chip_label, blue_chip_label, green_chip_label):
         self.player_card_labels = player_card_labels
         self.dealer_card_labels = dealer_card_labels
 
         self.player_score_label = player_score_label
         self.dealer_score_label = dealer_score_label
         self.instruction_label = instruction_label
+
+        self.player_money_label = player_money_label
+        self.dealer_money_label = dealer_money_label
 
         self.b_deal = b_deal
         self.b_hit = b_hit
@@ -25,6 +29,12 @@ class Game:
         #   players
         self.player = Player()
         self.dealer = Dealer()
+        self.bets_label = bets_label
+        self.bet = int(bets_label.cget("text")[1])
+
+        self.red_chip_label = red_chip_label
+        self.blue_chip_label = blue_chip_label
+        self.green_chip_label = green_chip_label
 
     def init_game(self):
         self.deck_of_cards.shuffle()
@@ -36,11 +46,17 @@ class Game:
         self.b_hit.config(state='normal')
         self.b_stand.bind('<Button-1>', lambda event: self.player_on_stand())
         self.b_stand.config(state='normal')
+        self.red_chip_label.unbind('<Button-1>')
+        self.blue_chip_label.unbind('<Button-1>')
+        self.green_chip_label.unbind('<Button-1>')
         self.instruction_label.config(text="")
         self.get_next_card(player_request=True, init=True)
         self.get_next_card(player_request=False, init=True, visible=False)
         self.get_next_card(player_request=True, init=True)
         self.get_next_card(player_request=False)
+        self.player.subtract_from_current_money(self.bet)
+        self.dealer.subtract_from_current_money(self.bet)
+        self.update_money()
 
     def prepare_players(self):
         self.player.prepare_to_new_round()
@@ -108,11 +124,16 @@ class Game:
         if player_points > 20 or dealer_points > 20:
             if player_points == 21 and dealer_points == 21:
                 self.instruction_label.config(text="PUSH !")
+                self.player.add_to_current_money(self.bet)
+                self.dealer.add_to_current_money(self.bet)
             elif player_points == 21 or dealer_points > 21:
                 self.instruction_label.config(text="You won ! Press 'DEAL' to try again.")
+                self.player.add_to_current_money(self.bet*2)
             elif player_points > 21 or dealer_points == 21:
                 self.instruction_label.config(text="Dealer won. Press 'DEAL' to try again.")
+                self.dealer.add_to_current_money(self.bet*2)
             # end game
+            self.update_money()
             self.end_game()
 
     def player_on_stand(self):
@@ -125,7 +146,7 @@ class Game:
     def end_game(self):
         self.update_score_table(player_request=False)
         self.show_dealer_hidden_card()
-        self.b_deal.bind('<Button-1>', lambda event: self.init_game())
+        self.b_deal.bind('<Button-1>', lambda event: self.ask_for_change_bets())
         self.b_deal.config(state='normal')
         self.b_hit.config(state='disabled')
         self.b_hit.unbind('<Button-1>')
@@ -145,14 +166,34 @@ class Game:
     def dealer_turn(self):
         self.show_dealer_hidden_card()
         while self.dealer.is_sure_to_get_card():
-            self.get_next_card(player_request=False)
+            self.get_next_card(player_request=False, init=True)
 
     # extra method to check who has more points but under 21
     def check_who_win(self):
         self.end_game()
         if self.player.get_points() > self.dealer.get_points():
             self.instruction_label.config(text="You won ! Press 'DEAL' to try again.")
+            self.player.add_to_current_money(self.bet * 2)
         elif self.player.get_points() < self.dealer.get_points():
             self.instruction_label.config(text="Dealer won. Press 'DEAL' to try again.")
-        else:
+            self.dealer.add_to_current_money(self.bet * 2)
+        elif self.player.get_points() == self.dealer.get_points():
             self.instruction_label.config(text="PUSH !")
+            self.player.add_to_current_money(self.bet)
+            self.dealer.add_to_current_money(self.bet)
+        self.update_money()
+
+    def update_money(self):
+        self.player_money_label.config(text="You = $" + str(self.player.get_money()))
+        self.dealer_money_label.config(text="Dealer = $" + str(self.dealer.get_money()))
+
+    def ask_for_change_bets(self):
+        self.instruction_label.config(text="You can optionally change bet and then 'DEAL'")
+        self.b_deal.bind('<Button-1>', lambda event: self.init_game())
+        self.red_chip_label.bind('<Button-1>', lambda event: self.set_bets(1))
+        self.blue_chip_label.bind('<Button-1>', lambda event: self.set_bets(2))
+        self.green_chip_label.bind('<Button-1>', lambda event: self.set_bets(5))
+
+    def set_bets(self, bet):
+        self.bet = bet
+        self.bets_label.config(text="$" + str(bet))

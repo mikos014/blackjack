@@ -4,6 +4,7 @@ class Player:
         self.current_card_index = 0
         self.number_of_aces = 0
         self.points = 0
+        self.money = 100
 
     def get_cards(self):
         return self.cards
@@ -25,6 +26,15 @@ class Player:
 
     def set_points(self, points):
         self.points = points
+
+    def get_money(self):
+        return self.money
+
+    def add_to_current_money(self, money):
+        self.money += money
+
+    def subtract_from_current_money(self, money):
+        self.money -= money
 
     def count_points(self, aces_as_one_point=False):
         points = 0
