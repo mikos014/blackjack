@@ -9,13 +9,6 @@ root = Tk()
 root.title(window_title)
 root.geometry(window_geometry)
 
-# frame = Frame(root)
-# frame.pack()
-#
-# canvas = Canvas(frame, bg="black", width=960, height=640)
-# canvas.pack()
-
-
 # UI
 def show_button(button):
     if button["text"] == "DEAL":
@@ -29,18 +22,12 @@ def show_button(button):
 
 
 # UX
-#   set buttons
-# bg_image = ImageTk.PhotoImage(Image.open("assets/background.jpg"))
-# bg_label = Label(image=bg_image)
-# bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 root.configure(bg="darkgreen")
 
 b_deal = Button(text="DEAL", width=12, height=2)
 show_button(b_deal)
 b_hit = Button(text="HIT", width=12, height=2)
-# show_button(b_hit)
 b_stand = Button(text="STAND", width=12, height=2)
-# show_button(b_stand)
 
 #   cards_layout
 card_back_i = Image.open(card_path + "back.png").resize(card_size, Image.ANTIALIAS)
@@ -127,8 +114,6 @@ green_chip_iTK = ImageTk.PhotoImage(green_chip_i)
 green_chip_label = Label(image=green_chip_iTK, bg=chip_background)
 green_chip_label.place(x=chip_layout[2][0], y=chip_layout[2][1])
 
-bets = 1
-
 red_chip_label.bind('<Button-1>', lambda event: set_bets(1))
 blue_chip_label.bind('<Button-1>', lambda event: set_bets(2))
 green_chip_label.bind('<Button-1>', lambda event: set_bets(5))
@@ -142,13 +127,10 @@ def start_playing():
     game = Game(player_card_labels, dealer_card_labels, player_score_label, dealer_score_label, instruction_label,
                 b_deal, b_hit, b_stand, player_money_label, dealer_money_label, bets_label,
                 red_chip_label, blue_chip_label, green_chip_label)
-
     show_button(b_hit)
     show_button(b_stand)
     game.init_game()
-    print("in")
 
 
-print("out")
 b_deal.bind('<Button-1>', lambda event: start_playing())
 root.mainloop()

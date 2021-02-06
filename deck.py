@@ -10,7 +10,6 @@ class Deck:
         self.out_of_deck_cards = 0
 
     def shuffle(self):
-        # TODO break, text about shuffling, setting is_on_deck = True in all cards
         for c in self.cards:
             c.set_on_deck(True)
         random.shuffle(self.cards)
